@@ -11,6 +11,23 @@ const PhotoSchema = new Schema(
       type: String,
       required: true,
     },
+    name: {
+      type: String,
+      required: false,
+    },
+    location: {
+      type: String,
+      required: false,
+    },
+    feature: {
+      type: String,
+      required: false,
+    },
+    type: {
+      // domain : loss, find
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

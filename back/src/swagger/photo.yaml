@@ -11,3 +11,15 @@ components:
         species:
           type: string 
           description: 동물 종
+        name:
+          type: string 
+          description: 동물 이름
+        location:
+          type: string 
+          description: 동물 잃어버리거나 찾은 위치
+        feature:
+          type: string 
+          description: 동물 특징
+        type:
+          type: string 
+          description: 동물 잃어버림(loss) / 찾아줌(find)

@@ -5,6 +5,7 @@
  *    description: API to manage Photo
  */
 import { Router } from "express";
+import { photoService } from "../services/photoService.js";
 import axios from "axios";
 export const photoRouter = Router();
 
@@ -32,7 +33,7 @@ photoRouter.post("/", async function (req, res, next) {
   try {
     const { imageURL } = req.body;
     const response = await axios.post(
-      // flask 요청 : 사진에 해당하는 종 전달 요청
+      // flask 요청 : 사진에 해당하는 동물 종 요청
       `${process.env.FLASK_BASE_URL}/photos`,
       imageURL
     );
@@ -41,10 +42,11 @@ photoRouter.post("/", async function (req, res, next) {
       throw "데이터를 받아오지 못했습니다.";
     }
     const { data } = response;
-
-    const animalData = await photoService.addAnimal({
+    const type = "find";
+    const animalData = await photoService.addFindAnimal({
       imageURL,
       species: data,
+      type,
     }); // Saving DB
     res.status(200).send(animalData);
   } catch (error) {
@@ -76,8 +78,55 @@ photoRouter.get("/:species", async function (req, res, next) {
       throw "데이터를 받아오지 못했습니다.";
     }
 
-    const animalList = await photoService.getAnimals({ species }); // finding animals
+    const animalList = await photoService.getLostAnimals({ species }); // finding animals(fake datas)
     res.status(200).send(animalList);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
+ * @swagger
+ * /photos/fake:
+ *   post:
+ *     tags: [Photo]
+ *     description: fake 데이터를 만들기 위해 만드는 임시 api
+ *     produces:
+ *     - "application/json"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             properties:
+ *               imageURL:
+ *                 type: string
+ *               species:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               feature:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: "fake 데이터를 만들기 위해 만드는 임시 api 완료"
+ */
+photoRouter.post("/fake", async function (req, res, next) {
+  try {
+    const { imageURL, species, name, feature, location } = req.body;
+    const type = "loss";
+
+    const animalData = await photoService.addFakeAnimal({
+      imageURL,
+      species,
+      name,
+      feature,
+      location,
+      type,
+    }); // Saving DB
+    res.status(200).send(animalData);
   } catch (error) {
     next(error);
   }
