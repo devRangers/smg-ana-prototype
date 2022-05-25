@@ -1,0 +1,13 @@
+components:
+  schemas:
+    Photo: 
+      properties: 
+        _id: 
+          type: string 
+          description: 동물 고유 번호 
+        imageURL:
+          type: string 
+          description: 동물 사진 URL
+        species:
+          type: string 
+          description: 동물 종
