@@ -21,7 +21,6 @@ function CameraComp() {
         accept="image/*"
         id="icon-button-file"
         type="file"
-        capture="environment"
         onChange={(e) => handleCapture(e.target)}
         style={{ display: "none" }}
       />
