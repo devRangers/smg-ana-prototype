@@ -1,36 +1,45 @@
-import React, { useState, useCallback, useRef } from "react";
-import Webcam from "react-webcam";
-
-const videoConstraints = {
-  width: 680,
-  height: 720,
-  facingMode: "environment",
-};
+import React, { useState } from "react";
+import { AiFillCamera } from "react-icons/ai";
 
 function CameraComp() {
-  const [image, setImage] = useState(null);
+  const [source, setSource] = useState(null);
 
-  const webcamRef = useRef(null);
-
-  const capture = useCallback(() => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setImage(imageSrc);
-  }, [webcamRef]);
+  const handleCapture = (target) => {
+    if (target.files) {
+      if (target.files.length !== 0) {
+        const file = target.files[0];
+        const newUrl = URL.createObjectURL(file);
+        setSource(newUrl);
+      }
+    }
+  };
 
   return (
-    <>
-      <Webcam
-        audio={false}
-        height={720}
-        ref={webcamRef}
-        screenshotFormat="image/jpeg"
-        width={680}
-        videoConstraints={videoConstraints}
+    <div>
+      <h1>사진 업로드</h1>
+      <input
+        accept="image/*"
+        id="icon-button-file"
+        type="file"
+        capture="environment"
+        onChange={(e) => handleCapture(e.target)}
+        style={{ display: "none" }}
       />
-      <button onClick={capture}>Capture photo</button>
+      <label
+        htmlFor="icon-button-file"
+        style={{
+          padding: "6px 25px",
+          backgroundColor: "#FF6600",
+          borderRadius: "4px",
+          color: "white",
+          cursor: "pointer",
+        }}
+      >
+        <AiFillCamera />
+      </label>
 
-      {image && <img src={image} alt="taken" width="300" />}
-    </>
+      {source && <img src={source} alt="animal" width="200" />}
+    </div>
   );
 }
 
