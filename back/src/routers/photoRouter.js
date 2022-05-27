@@ -42,6 +42,7 @@ photoRouter.post(
       const { imageURL, savefile } = await photoService.SetGcsBucket({
         file, // gcs upload
       });
+      console.log(`${process.env.FLASK_BASE_URL}/photos`);
       const response = await axios.post(
         // flask 요청 : 사진에 해당하는 동물 종 요청
         `${process.env.FLASK_BASE_URL}/photos`,
@@ -51,13 +52,11 @@ photoRouter.post(
       if (!response) {
         throw "데이터를 받아오지 못했습니다.";
       }
-
-      const { data } = response;
       const type = "find";
 
       const animalData = await photoService.addFindAnimal({
         imageURL,
-        species: data,
+        species: response.breed,
         type,
       }); // Saving DB
 
