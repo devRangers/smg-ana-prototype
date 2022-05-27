@@ -21,13 +21,12 @@ function CameraComp() {
 
   const handleSubmit = async () => {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("imageURL", file);
     const res = await axios.post("http://localhost:5005/photos", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-
     setResult(res.data.species);
   };
 
@@ -38,6 +37,7 @@ function CameraComp() {
         accept="image/*"
         id="icon-button-file"
         type="file"
+        name="imageURL"
         onChange={(e) => handleCapture(e.target)}
         style={{ display: "none" }}
       />
