@@ -5,7 +5,7 @@ import axios from "axios";
 function CameraComp() {
   const [file, setFile] = useState(null);
   const [source, setSource] = useState(null);
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState(null);
 
   const handleCapture = (target) => {
     if (target.files) {
@@ -27,6 +27,7 @@ function CameraComp() {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log(res.data);
     setResult(res.data.species);
   };
 
@@ -56,8 +57,21 @@ function CameraComp() {
 
       {source && <img src={source} alt="animal" width="200" />}
 
-      <button onClick={handleSubmit}>결과 가져오기</button>
-      {result.length > 0 && <h1>종 : {result}</h1>}
+      <button
+        onClick={handleSubmit}
+        style={{
+          padding: "6px 25px",
+          backgroundColor: "#ffbf69",
+          borderRadius: "4px",
+          color: "white",
+          cursor: "pointer",
+          border: "none",
+          margin: "0 10px",
+        }}
+      >
+        결과 가져오기
+      </button>
+      {result && <h1>종 : {result}</h1>}
     </div>
   );
 }
