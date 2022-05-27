@@ -46,9 +46,8 @@ photoRouter.post(
       const response = await axios.post(
         // flask 요청 : 사진에 해당하는 동물 종 요청
         `${process.env.FLASK_BASE_URL}/photos`,
-        savefile
+        { imageURL }
       );
-
       if (!response) {
         throw "데이터를 받아오지 못했습니다.";
       }
@@ -56,7 +55,7 @@ photoRouter.post(
 
       const animalData = await photoService.addFindAnimal({
         imageURL,
-        species: response.breed,
+        species: response.data,
         type,
       }); // Saving DB
 
