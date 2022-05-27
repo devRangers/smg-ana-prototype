@@ -20,9 +20,6 @@ export const photoService = {
     const filename = file.originalname.replace(" ", "-");
     const savefile = `${Date.now()}-${filename}`;
     const blob = gcsBucket.file(`AnimalImg/${savefile}`);
-
-    console.log(savefile);
-
     const blobStream = blob.createWriteStream({
       resumable: false,
       public: true,

@@ -33,36 +33,38 @@ export const photoRouter = Router();
  *       '200':
  *         description: "촬영된 사진으로 종 머신러닝 결과 전달 완료"
  */
-photoRouter.post("/", multer.single("file"), async function (req, res, next) {
-  try {
-    const file = req.file; // image form data
-    const { imageURL, savefile } = await photoService.SetGcsBucket({
-      file, // gcs upload
-    });
-    const response = await axios.post(
-      // flask 요청 : 사진에 해당하는 동물 종 요청
-      `${process.env.FLASK_BASE_URL}/photos`,
-      savefile,
-    );
+photoRouter.post(
+  "/",
+  multer.single("imageURL"),
+  async function (req, res, next) {
+    try {
+      const file = req.file; // image form data
+      const { imageURL, savefile } = await photoService.SetGcsBucket({
+        file, // gcs upload
+      });
+      console.log(`${process.env.FLASK_BASE_URL}/photos`);
+      const response = await axios.post(
+        // flask 요청 : 사진에 해당하는 동물 종 요청
+        `${process.env.FLASK_BASE_URL}/photos`,
+        { imageURL },
+      );
+      if (!response) {
+        throw "데이터를 받아오지 못했습니다.";
+      }
+      const type = "find";
 
-    if (!response) {
-      throw "데이터를 받아오지 못했습니다.";
+      const animalData = await photoService.addFindAnimal({
+        imageURL,
+        species: response.data,
+        type,
+      }); // Saving DB
+
+      res.status(200).send(animalData);
+    } catch (error) {
+      next(error);
     }
-
-    const { data } = response;
-    const type = "find";
-
-    const animalData = await photoService.addFindAnimal({
-      imageURL,
-      species: data,
-      type,
-    }); // Saving DB
-
-    res.status(200).send(animalData);
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 /**
  * @swagger
