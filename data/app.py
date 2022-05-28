@@ -11,6 +11,8 @@ app = Flask(__name__)
 
 MODEL_PATH = "./models/loaded_2.h5"
 
+app.run(host='0.0.0.0', port=5000)
+
 
 def load_model():
     loaded_model = keras.models.load_model(MODEL_PATH)
@@ -37,7 +39,6 @@ def photos():
 def findSpeices():
     params = request.get_json()
     imageURL = params["imageURL"]
-    print(imageURL)
 
     # image_path = request.files['image'].read()
     # image_path = "./test_img/mal.jpg"
